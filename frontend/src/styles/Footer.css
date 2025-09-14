@@ -1,0 +1,41 @@
+.footer {
+  background-color: var(--primary-color);
+  color: var(--text-color-dark);
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: var(--text-color-dark);
+  font-weight: 600;
+  text-decoration: none;
+  margin: 0 5px; /* spacing between phone and email */
+}
+
+/* Styling for links on hover */
+.footer a:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+/* Social link styling for icon + text */
+.footer .social-link {
+  display: inline-flex;        /* horizontal layout */
+  align-items: center;         /* vertical center */
+  gap: 6px;                    /* space between icon and text */
+  color: var(--text-color-dark);
+  font-weight: 600;
+  margin-left: 10px;           /* keep some space from previous item */
+  text-decoration: none;
+}
+
+.footer .social-link:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+/* Fix SVG spacing */
+.footer .social-link svg {
+  display: block;
+}
