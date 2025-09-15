@@ -2,23 +2,20 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
-  const [step, setStep] = useState(1);
+const BookingForm = ({ selectedService, fetchStaff, submitBooking }) => {
+  // We do NOT manage selectedService here, it's passed as prop
+  const [step, setStep] = useState(2); // start from step 2 since service is pre-selected
 
-  // service selection
-  const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
-
-  // date and time selection
+  // Date and time selection
   const [selectedDate, setSelectedDate] = useState(null);
 
-  // staff selection
+  // Staff selection
   const [staffList, setStaffList] = useState([]);
   const [loadingStaff, setLoadingStaff] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState("");
   const [anyStaff, setAnyStaff] = useState(true);
 
-  // contact information
+  // Contact info
   const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
@@ -27,27 +24,14 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  // Load services
-  useEffect(() => {
-    async function loadServices() {
-      try {
-        const data = await fetchServices();
-        setServices(data);
-      } catch (error) {
-        console.error("Error fetching Services:", error);
-      }
-    }
-    loadServices();
-  }, [fetchServices]);
-
-  // load staff
+  // Load staff when service and date are selected
   useEffect(() => {
     if (!selectedService || !selectedDate) return;
 
     async function loadStaff() {
       setLoadingStaff(true);
       try {
-        const data = await fetchStaff(selectedService.id, selectedDate);
+        const data = await fetchStaff(selectedService._id, selectedDate);
         setStaffList(data);
       } catch (error) {
         console.error("Error fetching staff:", error);
@@ -56,14 +40,13 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
         setLoadingStaff(false);
       }
     }
+
     loadStaff();
   }, [selectedService, selectedDate, fetchStaff]);
 
-  // validation helpers
+  // Validate each step
   const validateStep = () => {
     switch (step) {
-      case 1:
-        return !!selectedService;
       case 2:
         return !!selectedDate;
       case 3:
@@ -81,34 +64,33 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
     }
   };
 
-  // handle next button
   const handleNext = () => {
     if (!validateStep()) {
       alert("Please complete the current step before proceeding.");
-      return; // stop here if not valid
+      return;
     }
     setStep((prev) => prev + 1);
   };
 
-  // handle back button
   const handleBack = () => {
-    setStep((prev) => (prev > 1 ? prev - 1 : prev));
+    setStep((prev) => (prev > 2 ? prev - 1 : prev)); // no going back before step 2 here
   };
 
-  // handle submit button
   const handleSubmit = async () => {
     if (!validateStep()) {
       alert("Please fill all required information.");
       return;
     }
+
     const bookingData = {
-      serviceId: selectedService.id,
+      serviceId: selectedService._id,
       date: selectedDate,
       staffId: anyStaff ? null : selectedStaffId,
       contactInfo,
       agreedToPolicy,
       agreedToTerms,
     };
+
     try {
       await submitBooking(bookingData);
       setStep(5);
@@ -120,34 +102,11 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
 
   return (
     <div>
-      {step === 1 && (
-        <div>
-          <h2>Select a Service</h2>
-          <ul>
-            {services.map((service) => (
-              <li key={service.id}>
-                <button
-                  type="button"
-                  onClick={() => setSelectedService(service)}
-                  style={{
-                    fontWeight:
-                      selectedService?.id === service.id ? "bold" : "normal",
-                  }}
-                >
-                  {service.name} - €{service.price} - {service.duration} hrs
-                </button>
-              </li>
-            ))}
-          </ul>
-          <button disabled={!validateStep()} onClick={handleNext}>
-            Next
-          </button>
-        </div>
-      )}
+      <h2>Booking for: {selectedService.service_name || selectedService.name}</h2>
 
       {step === 2 && (
-        <div>
-          <h2>Select Date and Time</h2>
+        <>
+          <h3>Select Date and Time</h3>
           <DatePicker
             selected={selectedDate}
             onChange={setSelectedDate}
@@ -158,16 +117,18 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
             placeholderText="Pick a date and time"
           />
           <br />
-          <button onClick={handleBack}>Back</button>
+          <button onClick={() => setStep(1)} disabled>
+            Back
+          </button>
           <button disabled={!validateStep()} onClick={handleNext}>
             Next
           </button>
-        </div>
+        </>
       )}
 
       {step === 3 && (
-        <div>
-          <h2>Select Staff</h2>
+        <>
+          <h3>Select Staff</h3>
           <label>
             <input
               type="radio"
@@ -207,12 +168,12 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
           <button disabled={!validateStep()} onClick={handleNext}>
             Next
           </button>
-        </div>
+        </>
       )}
 
       {step === 4 && (
-        <div>
-          <h2>Contact Information and Policies</h2>
+        <>
+          <h3>Contact Information and Policies</h3>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -294,25 +255,25 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
               Confirm Booking
             </button>
           </form>
-        </div>
+        </>
       )}
 
       {step === 5 && (
-        <div>
+        <>
           <h2>Booking Confirmed!</h2>
           <p>
             Thank you, {contactInfo.name}! Your booking for{" "}
-            {selectedService.name} on {selectedDate.toLocaleString()}{" "}
+            {selectedService.service_name || selectedService.name} on{" "}
+            {selectedDate.toLocaleString()}{" "}
             {anyStaff
               ? "with any available staff"
-              : `with staff ID ${selectedStaffId}`}{" "}
-            has been received.
+              : `with staff ID ${selectedStaffId}`}
+            {" "} has been received.
           </p>
           <button
             onClick={() => {
               // Reset form to book again or navigate away
-              setStep(1);
-              setSelectedService(null);
+              setStep(2);
               setSelectedDate(null);
               setSelectedStaffId("");
               setContactInfo({ name: "", email: "", phone: "" });
@@ -323,7 +284,7 @@ const BookingForm = ({ fetchServices, fetchStaff, submitBooking }) => {
           >
             Book another Appointment
           </button>
-        </div>
+        </>
       )}
     </div>
   );

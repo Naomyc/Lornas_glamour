@@ -9,9 +9,10 @@ const formatDuration = (minutes) => {
   }`.trim();
 };
 
-const ServiceList = ({ expandedCategory }) => {
+const ServiceList = ({ expandedCategory,onServiceClick }) => {
   const [services, setServices] = useState({});
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const fetchServices = async () => {
