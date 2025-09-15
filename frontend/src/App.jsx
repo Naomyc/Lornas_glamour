@@ -1,13 +1,22 @@
 import React from 'react';
-import Home from './pages/Home';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App(){
-  return(
-    <div className="container">
-      <Navbar/>
-      <Home/>
-    </div>
-  )
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import BookingPage from './pages/BookingPage'; // <-- You'll need to create this
+
+function App() {
+  return (
+    <Router>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/booking" element={<BookingPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
-export default App
+
+export default App;

@@ -7,3 +7,11 @@ const api = axios.create({
 export const getServices = () => api.get("/services");
 export const getCategories = () => api.get("/api/categories");
 
+export const getStaff = (serviceId, date) =>
+  api.get(`/api/staff/available`, {
+    params: { serviceId, date },
+  });
+
+// ✅ Submit booking
+export const submitBooking = (bookingData) =>
+  api.post("/api/bookings", bookingData);

@@ -43,21 +43,24 @@ const ServiceList = ({ expandedCategory }) => {
 
   return (
     <div className="service-list">
-      { services[expandedCategory] && services[expandedCategory].length > 0 && (
-            <div key={expandedCategory} className="service-category">
-              <h3>{expandedCategory}</h3>
-              <ul>
-                {services[expandedCategory].map((service) => (
-                  <li key={service._id}>
-                    <p><strong>{service.service_name}</strong></p>
-                    <p>Price: €{service.price}</p>
-                    <p>Duration: {formatDuration(service.duration)}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )
-      }
+      {services[expandedCategory] && services[expandedCategory].length > 0 && (
+        <div key={expandedCategory} className="service-category">
+          <h3>{expandedCategory}</h3>
+          <ul>
+            {services[expandedCategory].map((service) => (
+              <li
+                key={service._id}
+                onClick={() => onServiceClick && onServiceClick(service)}
+                style={{ cursor: "pointer", borderBottom: "1px solid #ccc", padding: "10px" }}
+              >
+                <p><strong>{service.service_name}</strong></p>
+                <p>Price: €{service.price}</p>
+                <p>Duration: {formatDuration(service.duration)}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
