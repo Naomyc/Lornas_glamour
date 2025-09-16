@@ -3,6 +3,7 @@ import Categories from "../components/Categories";
 import ServiceList from "../components/ServiceList";
 import BookingForm from "../components/BookingForm";
 import { getServices, getStaff, submitBooking } from "../api/salonApi";
+import "../styles/BookingForm.css";
 
 const BookingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -18,7 +19,7 @@ const BookingPage = () => {
   };
 
   return (
-    <div>
+    <div className="booking-form">
       <h2>Book an Appointment</h2>
       {!selectedService && (
         <>
