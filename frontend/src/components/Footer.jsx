@@ -6,7 +6,7 @@ const Footer=()=>{
   const currentYear= new Date().getFullYear();
 
   return(
-    <footer className="footer">
+    <footer className="footer" id="contact">
       <p>
         Contact us: <a href="tel:0414723651">0414 723 651</a> |{" "}
         <a href="mailto:lornajep12@gmail.com">lornajep12@gmail.com</a>

@@ -9,22 +9,24 @@ const StaffSchema = new mongoose.Schema({
   },
   specialties: { type: [String], default: [] },
   availability: {
-    workingDays: { type: [String], default: [] },
-    workingHours: {
-      start: { type: String },
-      end: { type: String }
+  workingDays: [{
+    day: { type: String, required: true },
+    start: { type: String, required: true },
+    end: { type: String, required: true }
+  }],
+  daysOff: [{ type: Date }],
+  leaves: [{
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    type: {
+      type: String,
+      enum: ["paid vacation", "paid sick", "unpaid leave"],
+      required: true
     },
-    leaves: [{
-      startDate: { type: Date, required: true },
-      endDate: { type: Date, required: true },
-      type: {
-        type: String,
-        enum: ["paid vacation", "paid sick", "unpaid leave"],
-        required: true
-      },
-      notes: { type: String }
-    }]
-  },
+    notes: { type: String }
+  }]
+},
+
   active: { type: Boolean, default: true },
 }, { timestamps: true });
 

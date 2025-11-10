@@ -1,5 +1,6 @@
 import React from "react";
 import Footer from "../components/Footer";
+import StaffAvailability from "../components/StaffAvailability";
 import SalonServices from "../components/SalonServices";
 import { Link } from "react-router-dom";
 const Home = () => {
@@ -23,6 +24,9 @@ const Home = () => {
             Book Now
           </Link>
         </div>
+      </section>
+      <section>
+        <StaffAvailability />
       </section>
 
       <footer>

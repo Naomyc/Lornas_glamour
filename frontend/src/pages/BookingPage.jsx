@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Categories from "../components/Categories";
 import ServiceList from "../components/ServiceList";
 import BookingForm from "../components/BookingForm";
@@ -7,39 +7,115 @@ import "../styles/BookingForm.css";
 
 const BookingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedService, setSelectedService] = useState(null);
+  const [servicesForCategory, setServicesForCategory] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const toggleCategory = (category) => {
-    setSelectedCategory((prev) => (prev === category ? null : category));
-    setSelectedService(null); // Reset service when switching category
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+      setServicesForCategory([]);
+    } else {
+      setSelectedCategory(category);
+      loadServices(category);
+    }
+    setSelectedServices([]);
   };
 
+  const loadServices = async (category) => {
+    try {
+      const response = await getServices();
+      const allServices = response.data;
+      const filtered = allServices.filter(
+        (s) => s.category?.name === category
+      );
+      setServicesForCategory(filtered);
+    } catch (error) {
+      console.error("Failed to load services:", error);
+      setServicesForCategory([]);
+    }
+  };
+
+  // Called when user selects a service in ServiceList
   const handleServiceSelect = (service) => {
-    setSelectedService(service);
+    setSelectedServices([service]); // single select for now
+    setCurrentStep(2); // move to date/time step
+  };
+
+  // Called when user clicks "Back" to return to service selection
+  const handleBackToServices = () => {
+    setCurrentStep(1);
+    setSelectedServices([]);
   };
 
   return (
     <div className="booking-form">
       <h2>Book an Appointment</h2>
-      {!selectedService && (
-        <>
-          <Categories
-            expandedCategory={selectedCategory}
-            toggleCategory={toggleCategory}
-          />
-          <ServiceList
-            expandedCategory={selectedCategory}
-            onServiceClick={handleServiceSelect} // pass click handler
-          />
-        </>
+
+      {/* Step Navigation */}
+      <div className="step-nav">
+        <ul className="step-nav-list">
+          <li
+            onClick={() => setCurrentStep(1)}
+            className={currentStep === 1 ? "active" : ""}
+          >
+            Service
+          </li>
+          <li
+            onClick={() => selectedServices.length > 0 && setCurrentStep(2)}
+            className={currentStep === 2 ? "active" : ""}
+          >
+            Date & Time
+          </li>
+          <li
+            onClick={() => currentStep > 2 && setCurrentStep(3)}
+            className={currentStep === 3 ? "active" : ""}
+          >
+            Staff
+          </li>
+          <li
+            onClick={() => currentStep > 3 && setCurrentStep(4)}
+            className={currentStep === 4 ? "active" : ""}
+          >
+            Contact
+          </li>
+          <li
+            onClick={() => currentStep > 4 && setCurrentStep(5)}
+            className={currentStep === 5 ? "active" : ""}
+          >
+            Confirmation
+          </li>
+        </ul>
+      </div>
+
+      {/* Step 1: Select Category and Service */}
+      {currentStep === 1 && !selectedCategory && (
+        <Categories
+          expandedCategory={selectedCategory}
+          toggleCategory={toggleCategory}
+          showImage={false}
+        />
       )}
 
-      {selectedService && (
+      {currentStep === 1 && selectedCategory && (
+        <ServiceList
+          expandedCategory={selectedCategory}
+          services={servicesForCategory}
+          onBack={() => toggleCategory(selectedCategory)}
+          onServiceClick={handleServiceSelect}  // called when service selected
+        />
+      )}
+
+      {/* Steps 2 to 5 handled by BookingForm */}
+      {currentStep > 1 && selectedServices.length > 0 && (
         <BookingForm
-          selectedService={selectedService}
+          selectedService={selectedServices[0]}
           fetchServices={getServices}
           fetchStaff={getStaff}
           submitBooking={submitBooking}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          onBackToServices={handleBackToServices}
         />
       )}
     </div>

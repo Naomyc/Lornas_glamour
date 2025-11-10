@@ -15,11 +15,14 @@ function validateObjectId(req, res, next) {
 
 
 //Router
+router.get("/available", staffController.getAvailableStaff);
 router.post("/", staffController.createStaff);
 router.get("/", staffController.getAllStaff);
 router.get("/:id", validateObjectId, staffController.getStaffById);
 router.put("/:id", validateObjectId, staffController.updateStaff);
 router.patch("/:id/active", validateObjectId, staffController.patchStaff);
 router.patch("/:id/delete", validateObjectId, staffController.deleteStaff);
+
+
 
 module.exports = router;
