@@ -100,3 +100,83 @@ button:focus-visible {
     background-color: #8a4225;
   }
 }
+.home-container{
+  text-align:center ;
+  background-color:var(--secondary-color);
+  color: var(--text-color-light);
+  padding-bottom: 2rem;
+}
+.home-container header{
+  background-color: var(--primary-color);
+  color: var(--bg-color-light);
+  padding:3rem 1rem;
+  border-radius: 0 0 20px 20px;
+
+}
+.home-container header h1{
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+
+}
+.home-container header p{
+  font-size:1.2 rem;
+  opacity:0.9;
+}
+.intro{
+  margin:3 rem auto;
+  max-width:800px;
+}
+.intro h2 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+.book-now-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--bg-color-light);
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.book-now-button:hover {
+  background-color: var(--primary-color-dark);
+  transform: scale(1.03);
+}
+.navbar{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  padding:1 rem 2rem;
+  background-color: var(--secondary-color);
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+
+}
+
+.logo{
+  display:flex;
+  width: 40px;
+  height: 40px;
+}
+.logo p {
+  font-size: 1rem; 
+  font-weight: 600;
+  color: var(--text-color-light);
+  margin: 0;
+  align-items: center;
+}
+.navlinks {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+.navlinks li a {
+  text-decoration: none;
+  color: var(--text-color-light);
+  font-weight: 600;
+  transition: color 0.3s;
+}
+.navlinks li a:hover{
+  color:var(--primary-color)
+}

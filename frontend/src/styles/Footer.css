@@ -1,41 +1,171 @@
-.footer {
+/* ========================
+   :root - Variables
+======================== */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  color-scheme: light dark;
+
+  --primary-color: #b85c38;
+  --secondary-color: #f2e9e4;
+  --text-color-light: #242424;
+  --text-color-dark: #f5f5f5;
+  --bg-color-light: #ffffff;
+  --bg-color-dark: #121212;
+
+  /* Footer suggestion */
+  --footer-bg-color: #8a4225;
+  --footer-text-color: #f2e9e4;
+
+  /* Typography and smoothing */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Utility spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+}
+
+/* ========================
+   Base HTML & Body
+======================== */
+html { font-size: 16px; }
+@media (max-width: 768px) { html { font-size: 14px; } }
+@media (max-width: 480px) { html { font-size: 13px; } }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+  color: var(--text-color-light);
+}
+
+/* ========================
+   Typography
+======================== */
+h1, h2, h3 { 
+  font-size: 3em;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+a { color: var(--primary-color); font-weight: 600; text-decoration: none; transition: color 0.3s, opacity 0.3s; }
+a:hover { text-decoration: underline; opacity: 0.9; }
+
+/* ========================
+   Buttons
+======================== */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
   background-color: var(--primary-color);
-  color: var(--text-color-dark);
+  color: white;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.2s ease;
+  outline-offset: 2px;
+}
+button:hover { border-color: #8a4225; transform: scale(1.02); }
+button:focus, button:focus-visible { outline: 3px auto solid #c67847; }
+
+/* ========================
+   Utilities
+======================== */
+.text-center { text-align: center; }
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-6 { gap: 6px; }
+.link { font-weight: 600; text-decoration: none; transition: color 0.3s, opacity 0.3s; }
+.link:hover { text-decoration: underline; opacity: 0.9; }
+
+/* ========================
+   Navbar
+======================== */
+.navbar {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--secondary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.navlinks { list-style: none; display: flex; gap: 1.5rem; }
+.navlinks li a { color: var(--text-color-light); }
+
+/* ========================
+   Home container
+======================== */
+.home-container {
   text-align: center;
-  padding: 20px 10px;
+  background-color: var(--secondary-color);
+  color: var(--text-color-light);
+  padding-bottom: var(--spacing-md);
+}
+.home-container header {
+  background-color: var(--primary-color);
+  color: var(--bg-color-light);
+  padding: var(--spacing-lg) var(--spacing-sm);
+  border-radius: 0 0 20px 20px;
+}
+.home-container header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.home-container header p { font-size: 1.2rem; opacity: 0.9; }
+
+.intro { margin: var(--spacing-lg) auto; max-width: 800px; }
+.intro h2 { color: var(--primary-color); margin-bottom: 0.5rem; }
+
+/* ========================
+   Book Now Button
+======================== */
+.book-now-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--bg-color-light);
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.book-now-button:hover { background-color: #8a4225; transform: scale(1.03); }
+
+/* ========================
+   Footer
+======================== */
+.footer {
+  background-color: var(--footer-bg-color);
+  color: var(--footer-text-color);
+  text-align: center;
+  padding: var(--spacing-sm) var(--spacing-md);
   font-size: 0.9rem;
 }
 
-.footer a {
-  color: var(--text-color-dark);
-  font-weight: 600;
-  text-decoration: none;
-  margin: 0 5px; /* spacing between phone and email */
-}
+.footer a, .footer .social-link { color: var(--footer-text-color); }
+.footer a.link { margin: 0 5px; }
 
-/* Styling for links on hover */
-.footer a:hover {
-  text-decoration: underline;
-  opacity: 0.9;
-}
-
-/* Social link styling for icon + text */
 .footer .social-link {
-  display: inline-flex;        /* horizontal layout */
-  align-items: center;         /* vertical center */
-  gap: 6px;                    /* space between icon and text */
-  color: var(--text-color-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 600;
-  margin-left: 10px;           /* keep some space from previous item */
-  text-decoration: none;
+  margin-left: 10px;
 }
+.footer .social-link svg { display: block; }
 
-.footer .social-link:hover {
-  text-decoration: underline;
-  opacity: 0.9;
-}
-
-/* Fix SVG spacing */
-.footer .social-link svg {
-  display: block;
+/* ========================
+   Dark Mode
+======================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: var(--text-color-dark);
+    background-color: var(--bg-color-dark);
+  }
+  a { color: var(--primary-color); }
+  button { background-color: var(--primary-color); }
+  button:hover { background-color: #8a4225; }
 }

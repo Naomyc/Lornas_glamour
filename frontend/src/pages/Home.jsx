@@ -19,7 +19,7 @@ const Home = () => {
       </section>
       <section id="categories">
         <SalonServices />
-        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <div>
           <Link to="/booking" className="book-now-button">
             Book Now
           </Link>
