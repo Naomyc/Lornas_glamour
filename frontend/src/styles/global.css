@@ -1,0 +1,137 @@
+/* ========== Variables ========== */
+:root {
+  --primary-color: #b85c38;       /* warm, rich brown */
+  --secondary-color: #f2e9e4;     /* soft, cozy background */
+  --accent-color: #a67c52;        /* subtle highlight */
+  --text-color-light: #242424;    /* dark text for light backgrounds */
+  --text-color-dark: #f5f5f5;     /* light text for dark backgrounds */
+  --bg-color-light: #ffffff;      
+  --bg-color-dark: #121212;
+
+  --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --base-line-height: 1.5;
+  --base-font-weight: 400;
+  --heading-weight: 600;
+
+  --radius-small: 6px;
+  --radius-medium: 8px;
+  --radius-large: 12px;
+
+  --transition-speed: 0.3s;
+}
+
+/* ========== Base Styles ========== */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+}
+@media (max-width: 480px) {
+  html { font-size: 13px; }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-family);
+  line-height: var(--base-line-height);
+  font-weight: var(--base-font-weight);
+  color: var(--text-color-light);
+  background-color: var(--secondary-color);
+  -webkit-font-smoothing: antialiased;;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--heading-weight);
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  color: var(--text-color-light);
+}
+
+p {
+  margin: 0 0 1em 0;
+  color: var(--text-color-light);
+}
+
+a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #8a4225; /* slightly darker primary */
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ========== Buttons ========== */
+.btn {
+  border-radius: var(--radius-medium);
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  outline-offset: 2px;
+}
+
+.btn:hover {
+  border-color: #8a4225;
+}
+
+.btn:focus,
+.btn:focus-visible {
+  outline: 3px auto solid #c67847;
+}
+
+/* ========== Layout Helpers ========== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.flex {
+  display: flex;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ========== Dark Mode ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: var(--text-color-dark);
+    background-color: var(--bg-color-dark);
+  }
+  body {
+    background-color: var(--bg-color-dark);
+    color: var(--text-color-dark);
+  }
+  a {
+    color: var(--primary-color);
+  }
+  .btn {
+    background-color: var(--primary-color);
+  }
+  .btn:hover {
+    background-color: #8a4225;
+  }
+}

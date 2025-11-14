@@ -3,7 +3,8 @@ import Categories from "../components/Categories";
 import ServiceList from "../components/ServiceList";
 import BookingForm from "../components/BookingForm";
 import { getServices, getStaff, submitBooking } from "../api/salonApi";
-import "../styles/BookingForm.css";
+import "../styles/components.css";
+
 
 const BookingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -36,20 +37,18 @@ const BookingPage = () => {
     }
   };
 
-  // Called when user selects a service in ServiceList
   const handleServiceSelect = (service) => {
     setSelectedServices([service]); // single select for now
     setCurrentStep(2); // move to date/time step
   };
 
-  // Called when user clicks "Back" to return to service selection
   const handleBackToServices = () => {
     setCurrentStep(1);
     setSelectedServices([]);
   };
 
   return (
-    <div className="booking-form">
+    <div className="booking-page">
       <h2>Book an Appointment</h2>
 
       {/* Step Navigation */}
@@ -93,7 +92,6 @@ const BookingPage = () => {
         <Categories
           expandedCategory={selectedCategory}
           toggleCategory={toggleCategory}
-          showImage={false}
         />
       )}
 
@@ -102,7 +100,7 @@ const BookingPage = () => {
           expandedCategory={selectedCategory}
           services={servicesForCategory}
           onBack={() => toggleCategory(selectedCategory)}
-          onServiceClick={handleServiceSelect}  // called when service selected
+          onServiceClick={handleServiceSelect}
         />
       )}
 

@@ -1,38 +1,47 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import StaffAvailability from "../components/StaffAvailability";
 import SalonServices from "../components/SalonServices";
-import { Link } from "react-router-dom";
+import "../styles/components.css";
+
 const Home = () => {
   return (
-    <div className="home-container">
-      <header>
-        <h1>Welcome to Our Salon</h1>
-        <p>Your beauty,our passion</p>
+    <div className="home">
+      {/* Header Section */}
+      <header className="home__header">
+        <h1>Welcome to Lorna's Glamour</h1>
+        <p>Your beauty, our passion</p>
       </header>
-      <section className="intro">
+
+      {/* Intro Section */}
+      <section className="home__intro">
         <h2>What We Offer</h2>
         <p>
           From braids to color and everything in between — explore our top-notch
           services.
         </p>
       </section>
-      <section id="categories">
+
+      {/* Salon Services Section */}
+      <section className="home__services">
         <SalonServices />
-        <div style={{ textAlign: "center", marginTop: "2rem" }}>
-          <Link to="/booking" className="book-now-button">
+        <div className="home__cta">
+          <Link to="/booking" className="btn btn--primary">
             Book Now
           </Link>
         </div>
       </section>
-      <section>
+
+      {/* Staff Availability Section */}
+      <section className="home__availability">
         <StaffAvailability />
       </section>
 
-      <footer>
-        <Footer />
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
+
 export default Home;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getServices } from "../api/salonApi";
-import "../styles/ServiceList.css";
+
 
 const formatDuration = (minutes = 0) => {
   const hrs = Math.floor(minutes / 60);
@@ -47,38 +47,19 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
     return (
       <li
         key={service._id}
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-          marginBottom: "10px",
-          padding: "10px",
-          cursor: "pointer",
-          backgroundColor: isSelected ? "#e6f7ff" : "#fff",
-        }}
+        className={`service-card ${isSelected ? "selected" : ""}`}
         onClick={() =>
           isSelected ? setSelectedService(null) : setSelectedService(service)
         }
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div className="service-card-header">
           <strong>{service.service_name}</strong>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="service-card-price">
             <span>€{service.price}</span>
             <input type="checkbox" checked={isSelected} readOnly />
           </div>
         </div>
-        <div
-          style={{
-            marginTop: "4px",
-            color: "#555",
-            fontSize: "0.9em",
-          }}
-        >
+        <div className="service-card-duration">
           Duration: {formatDuration(service.duration)}
         </div>
       </li>
@@ -86,39 +67,17 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
   };
 
   return (
-    <div className="service-list" style={{ display: "flex", gap: "2rem" }}>
+    <div className="service-list-container">
       {/* Left Panel */}
-      <div style={{ flex: 1 }}>
-        <button
-          className="category-card expanded full-width"
-          onClick={onBack}
-          style={{
-            marginBottom: "1rem",
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            border: "none",
-            background: "transparent",
-            padding: 0,
-            textAlign: "left",
-          }}
-        >
-          <div
-            className="expanded-header"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <span className="expand-arrow back">{"<"}</span>
-            <p className="category-name" style={{ margin: 0 }}>
-              {expandedCategory}
-            </p>
+      <div className="service-list-panel">
+        <button className="back-button" onClick={onBack}>
+          <div className="back-button-header">
+            <span className="back-arrow">{"<"}</span>
+            <p className="category-name">{expandedCategory}</p>
           </div>
         </button>
 
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="service-list">
           {selectedService
             ? renderServiceCard(selectedService)
             : services[expandedCategory]?.map(renderServiceCard)}
@@ -127,17 +86,7 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
 
       {/* Right Panel: Summary */}
       {selectedService && (
-        <div
-          className="service-summary"
-          style={{
-            flexBasis: "300px",
-            border: "1px solid #ddd",
-            padding: "1rem",
-            borderRadius: "4px",
-            backgroundColor: "#fafafa",
-            height: "fit-content",
-          }}
-        >
+        <div className="service-summary-panel">
           <h4>Summary</h4>
           <p>
             <strong>{selectedService.service_name}</strong>
@@ -147,15 +96,7 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
 
           <button
             onClick={() => onServiceClick && onServiceClick(selectedService)}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 20px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
+            className="continue-button"
           >
             Continue to Book Time
           </button>

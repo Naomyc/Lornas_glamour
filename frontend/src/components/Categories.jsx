@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCategories } from "../api/salonApi";
-import "../styles/Categories.css";
+
 
 const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
   const [categories, setCategories] = useState([]);
@@ -37,7 +37,7 @@ const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
           const isExpanded = expandedCategory === cat.name;
 
           return isExpanded ? (
-            // === Expanded View ===
+            // Expanded View
             <button
               key={cat._id || cat.name}
               className="category-card expanded full-width"
@@ -49,7 +49,7 @@ const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
               </div>
             </button>
           ) : (
-            // === Collapsed Card ===
+            // Collapsed Card
             <button
               key={cat._id || cat.name}
               className={`category-card ${showImage ? "with-image" : "no-image"}`}

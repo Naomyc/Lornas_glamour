@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
-import "../styles/Navbar.css";
+import "../styles/components.css";
 import { HashLink } from "react-router-hash-link";
 
 const Navbar = () => {
@@ -8,9 +8,9 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="logo">
         <img src={logo} alt="Twinkle Salon Logo" />
-        <p style={{fontSize:"4"}}>Lorna's Glamour</p>
+        <p>Lorna's Glamour</p>
       </div>
-      <ul className="navlinks">
+      <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
         <li><HashLink smooth to="/#categories">Services</HashLink></li>
         <li><Link to="/booking">Booking</Link></li>

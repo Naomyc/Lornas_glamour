@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getStaff } from "../api/salonApi";
 import { setHours, setMinutes } from "date-fns";
-import "../styles/BookingForm.css";
+import "../styles/components.css";
 
 const BookingForm = ({
   selectedService,
@@ -55,12 +55,10 @@ const BookingForm = ({
 
   return (
     <div className="booking-form">
-   
-
       {/* Step 1: Service Summary */}
       {currentStep === 1 && selectedService && (
         <>
-          <h3>Selected Service</h3>
+          <h3 className="step-title">Selected Service</h3>
           <div className="service-summary">
             <p>
               <strong>{selectedService.service_name}</strong>
@@ -74,7 +72,7 @@ const BookingForm = ({
       {/* Step 2: Date & Time */}
       {currentStep === 2 && (
         <>
-          <h3>Select Date and Time</h3>
+          <h3 className="step-title">Select Date and Time</h3>
           <DatePicker
             selected={selectedDate}
             onChange={setSelectedDate}
@@ -86,19 +84,10 @@ const BookingForm = ({
             dateFormat="MMMM d, yyyy h:mm aa"
             placeholderText="Pick a date and time"
           />
-          {/* Next Step button, only enabled if date is selected */}
           <button
+            className={`continue-btn ${!selectedDate ? "disabled" : ""}`}
             disabled={!selectedDate}
             onClick={() => setCurrentStep(3)}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 20px",
-              backgroundColor: selectedDate ? "#007bff" : "#ccc",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor: selectedDate ? "pointer" : "not-allowed",
-            }}
           >
             Continue
           </button>
@@ -108,7 +97,7 @@ const BookingForm = ({
       {/* Step 3: Select Staff */}
       {currentStep === 3 && (
         <>
-          <h3>Select Staff</h3>
+          <h3 className="step-title">Select Staff</h3>
           <div className="radio-group">
             <label>
               <input
@@ -118,7 +107,7 @@ const BookingForm = ({
               />
               Any Available Staff
             </label>
-            <label style={{ marginLeft: "1rem" }}>
+            <label className="radio-margin">
               <input
                 type="radio"
                 checked={!anyStaff}
@@ -136,6 +125,7 @@ const BookingForm = ({
               <select
                 value={selectedStaffId}
                 onChange={(e) => setSelectedStaffId(e.target.value)}
+                className="staff-select"
               >
                 <option value="">-- Select Staff --</option>
                 {staffList.map((staff) => (
@@ -146,19 +136,9 @@ const BookingForm = ({
               </select>
             ))}
           <button
+            className={`continue-btn ${!anyStaff && !selectedStaffId ? "disabled" : ""}`}
             disabled={!anyStaff && !selectedStaffId}
             onClick={() => setCurrentStep(4)}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 20px",
-              backgroundColor:
-                anyStaff || selectedStaffId ? "#007bff" : "#ccc",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor:
-                anyStaff || selectedStaffId ? "pointer" : "not-allowed",
-            }}
           >
             Continue
           </button>
@@ -168,8 +148,8 @@ const BookingForm = ({
       {/* Step 4: Contact Information */}
       {currentStep === 4 && (
         <>
-          <h3>Contact Information</h3>
-          <label>
+          <h3 className="step-title">Contact Information</h3>
+          <label className="contact-label">
             Name:
             <input
               type="text"
@@ -177,9 +157,10 @@ const BookingForm = ({
               onChange={(e) =>
                 setContactInfo({ ...contactInfo, name: e.target.value })
               }
+              className="contact-input"
             />
           </label>
-          <label>
+          <label className="contact-label">
             Email:
             <input
               type="email"
@@ -187,9 +168,10 @@ const BookingForm = ({
               onChange={(e) =>
                 setContactInfo({ ...contactInfo, email: e.target.value })
               }
+              className="contact-input"
             />
           </label>
-          <label>
+          <label className="contact-label">
             Phone:
             <input
               type="tel"
@@ -197,28 +179,13 @@ const BookingForm = ({
               onChange={(e) =>
                 setContactInfo({ ...contactInfo, phone: e.target.value })
               }
+              className="contact-input"
             />
           </label>
           <button
-            disabled={
-              !contactInfo.name || !contactInfo.email || !contactInfo.phone
-            }
+            className={`continue-btn ${!contactInfo.name || !contactInfo.email || !contactInfo.phone ? "disabled" : ""}`}
+            disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
             onClick={() => setCurrentStep(5)}
-            style={{
-              marginTop: "1rem",
-              padding: "10px 20px",
-              backgroundColor:
-                contactInfo.name && contactInfo.email && contactInfo.phone
-                  ? "#007bff"
-                  : "#ccc",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor:
-                contactInfo.name && contactInfo.email && contactInfo.phone
-                  ? "pointer"
-                  : "not-allowed",
-            }}
           >
             Continue
           </button>
@@ -228,7 +195,7 @@ const BookingForm = ({
       {/* Step 5: Confirmation */}
       {currentStep === 5 && (
         <>
-          <h3>Confirmation</h3>
+          <h3 className="step-title">Confirmation</h3>
           <p>Your appointment has been confirmed!</p>
         </>
       )}
