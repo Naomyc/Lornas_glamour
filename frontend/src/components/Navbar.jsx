@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
-import "../styles/components.css";
+import "../styles/components.css"; 
 import { HashLink } from "react-router-hash-link";
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo">
-        <img src={logo} alt="Twinkle Salon Logo" />
+        <img src={logo} alt="Lorna's Glamour Logo" />  // Keep the logo as it is
         <p>Lorna's Glamour</p>
       </div>
       <ul className="nav-links">
