@@ -14,7 +14,7 @@ const Footer = () => {
         <a href="mailto:lornajep12@gmail.com">lornajep12@gmail.com</a>
       </p>
 
-      <p>© {currentYear} Lorna's Glamour. All rights reserved.</p>
+      <p>© {currentYear} LC Glamour. All rights reserved.</p>
 
       <a
         href="https://www.instagram.com/naomychep/?hl=en"

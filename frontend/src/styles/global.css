@@ -101,9 +101,10 @@ ul, ol {
 
 /* ========== Layout Helpers ========== */
 .container {
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .flex {

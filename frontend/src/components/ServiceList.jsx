@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getServices } from "../api/salonApi";
-
+import "../styles/components.css"; // make sure CSS below is included
 
 const formatDuration = (minutes = 0) => {
   const hrs = Math.floor(minutes / 60);
@@ -69,39 +69,52 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
   return (
     <div className="service-list-container">
       {/* Left Panel */}
-      <div className="service-list-panel">
+      <div
+        className={`service-list-panel ${
+          expandedCategory ? "expanded" : "collapsed"
+        }`}
+      >
         <button className="back-button" onClick={onBack}>
           <div className="back-button-header">
             <span className="back-arrow">{"<"}</span>
-            <p className="category-name">{expandedCategory}</p>
+            <p className="category-name">
+              {expandedCategory ? "Select a service" : expandedCategory}
+            </p>
           </div>
         </button>
 
         <ul className="service-list">
-          {selectedService
-            ? renderServiceCard(selectedService)
-            : services[expandedCategory]?.map(renderServiceCard)}
+          {services[expandedCategory]?.map(renderServiceCard)}
         </ul>
       </div>
 
       {/* Right Panel: Summary */}
-      {selectedService && (
-        <div className="service-summary-panel">
-          <h4>Summary</h4>
-          <p>
-            <strong>{selectedService.service_name}</strong>
-          </p>
-          <p>Duration: {formatDuration(selectedService.duration)}</p>
-          <p>Price: €{selectedService.price}</p>
+      <div className="service-summary-panel">
+        <h4>Summary</h4>
 
-          <button
-            onClick={() => onServiceClick && onServiceClick(selectedService)}
-            className="continue-button"
-          >
-            Continue to Book Time
-          </button>
-        </div>
-      )}
+        {!selectedService ? (
+          <>
+            <p>Start by selecting one or more services</p>
+            <button className="continue-button" disabled>
+              Continue to Book Time
+            </button>
+          </>
+        ) : (
+          <>
+            <p>
+              <strong>{selectedService.service_name}</strong>
+            </p>
+            <p>Duration: {formatDuration(selectedService.duration)}</p>
+            <p>Price: €{selectedService.price}</p>
+            <button
+              onClick={() => onServiceClick && onServiceClick(selectedService)}
+              className="continue-button"
+            >
+              Continue to Book Time
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 };

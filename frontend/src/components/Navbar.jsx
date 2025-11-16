@@ -7,13 +7,13 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo">
-        <img src={logo} alt="Lorna's Glamour Logo" />  // Keep the logo as it is
-        <p>Lorna's Glamour</p>
+        <img src={logo} alt="Lorna's Glamour Logo" /> 
+        <p>LC Glamour</p>
       </div>
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
         <li><HashLink smooth to="/#categories">Services</HashLink></li>
-        <li><Link to="/booking">Booking</Link></li>
+        <li><Link to="/booking">Book appointment</Link></li>
         <li><HashLink smooth to="/#contact">Contact</HashLink></li>
       </ul>
     </nav>

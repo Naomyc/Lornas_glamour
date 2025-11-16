@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Footer from "../components/Footer";
 import StaffAvailability from "../components/StaffAvailability";
 import SalonServices from "../components/SalonServices";
 import "../styles/components.css";
@@ -10,8 +9,11 @@ const Home = () => {
     <div className="home">
       {/* Header Section */}
       <header className="home__header">
-        <h1>Welcome to Lorna's Glamour</h1>
-        <p>Your beauty, our passion</p>
+        <h1>LC Glamour</h1>
+        <p>Expert services with touch of glamour and professionalism </p>
+         <Link to="/booking" className="btn btn--primary">
+            Book appointment
+          </Link>
       </header>
 
       {/* Intro Section */}
@@ -24,7 +26,7 @@ const Home = () => {
       </section>
 
       {/* Salon Services Section */}
-      <section className="home__services">
+      <section className="home__services" id="categories">
         <SalonServices />
         <div className="home__cta">
           <Link to="/booking" className="btn btn--primary">
@@ -38,8 +40,7 @@ const Home = () => {
         <StaffAvailability />
       </section>
 
-      {/* Footer */}
-      <Footer />
+     
     </div>
   );
 };

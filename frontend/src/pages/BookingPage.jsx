@@ -92,6 +92,7 @@ const BookingPage = () => {
         <Categories
           expandedCategory={selectedCategory}
           toggleCategory={toggleCategory}
+          showImage={false}
         />
       )}
 
