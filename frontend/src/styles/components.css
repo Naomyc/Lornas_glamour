@@ -54,7 +54,7 @@
 }
 
 /* ===== Step Navigation ===== */
-..step-nav {
+.step-nav {
   margin: 20px 0;
 }
 
@@ -471,6 +471,7 @@
 .service-list-container {
   display: flex;
   gap: 2rem;
+  align-items: flex-start;
 }
 
 /* Left Panel */
@@ -535,7 +536,7 @@
   border: 1px solid #ddd;
   margin-bottom: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
 .service-card.selected {

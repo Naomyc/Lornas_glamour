@@ -78,20 +78,23 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
           <div className="back-button-header">
             <span className="back-arrow">{"<"}</span>
             <p className="category-name">
-              {expandedCategory ? "Select a service" : expandedCategory}
+              {expandedCategory ? "Select a service" : "Choose a category"}
             </p>
           </div>
         </button>
 
         <ul className="service-list">
-          {services[expandedCategory]?.map(renderServiceCard)}
+          {!expandedCategory?(
+            <li>Please select a category to see services</li>
+          ):(
+          services[expandedCategory]?.map(renderServiceCard)
+          )}
         </ul>
       </div>
 
       {/* Right Panel: Summary */}
       <div className="service-summary-panel">
         <h4>Summary</h4>
-
         {!selectedService ? (
           <>
             <p>Start by selecting one or more services</p>

@@ -89,12 +89,24 @@ const BookingPage = () => {
 
       {/* Step 1: Select Category and Service */}
       {currentStep === 1 && !selectedCategory && (
-        <Categories
-          expandedCategory={selectedCategory}
-          toggleCategory={toggleCategory}
-          showImage={false}
-        />
-      )}
+  <>
+    <Categories
+      expandedCategory={selectedCategory}
+      toggleCategory={toggleCategory}
+      showImage={false}
+    />
+
+    {/* Collapsed summary for no category */}
+    <div className="service-summary-panel">
+      <h4>Summary</h4>
+      <p>Please select a category to see services here</p>
+      <button className="continue-button" disabled>
+        Continue to Book Time
+      </button>
+    </div>
+  </>
+)}
+
 
       {currentStep === 1 && selectedCategory && (
         <ServiceList
@@ -104,6 +116,7 @@ const BookingPage = () => {
           onServiceClick={handleServiceSelect}
         />
       )}
+      
 
       {/* Steps 2 to 5 handled by BookingForm */}
       {currentStep > 1 && selectedServices.length > 0 && (
