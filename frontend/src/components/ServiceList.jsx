@@ -10,7 +10,7 @@ const formatDuration = (minutes = 0) => {
   }`.trim();
 };
 
-const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
+const ServiceList = ({ expandedCategory, onServiceClick, onBack,showSummary=true, mode="booking",onBookNowClick }) => {
   const [services, setServices] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
@@ -47,21 +47,42 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
     return (
       <li
         key={service._id}
-        className={`service-card ${isSelected ? "selected" : ""}`}
-        onClick={() =>
-          isSelected ? setSelectedService(null) : setSelectedService(service)
+        className={`service-card ${mode==="home" ? "simple" : ""}${isSelected ? "selected" : ""}`}
+        onClick={() =>{
+          if (mode==="booking"){
+        
+          isSelected 
+          ? setSelectedService(null) 
+          : setSelectedService(service)
+          }}
         }
       >
         <div className="service-card-header">
           <strong>{service.service_name}</strong>
+          { mode==="booking"&&(
           <div className="service-card-price">
             <span>€{service.price}</span>
-            <input type="checkbox" checked={isSelected} readOnly />
+            </div>
+          )}
+          {mode==="home" && ( 
+          <>
+             <span className="service-price">€{service.price}</span>
+
+           
+            </>
+          )}
           </div>
-        </div>
+           
+        
+        
         <div className="service-card-duration">
           Duration: {formatDuration(service.duration)}
         </div>
+        {mode==="booking" && (
+          <div className="service-card-select">
+             <input type="checkbox" checked={isSelected} readOnly />
+          </div>
+        )}
       </li>
     );
   };
@@ -90,9 +111,18 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
           services[expandedCategory]?.map(renderServiceCard)
           )}
         </ul>
+        {mode === "home" && onBookNowClick && expandedCategory && (
+      <button
+        className="btn btn--primary"
+        onClick={() => onBookNowClick(expandedCategory)}
+      >
+        Book Now
+      </button>
+    )}
       </div>
 
       {/* Right Panel: Summary */}
+      {showSummary &&(
       <div className="service-summary-panel">
         <h4>Summary</h4>
         {!selectedService ? (
@@ -118,6 +148,7 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack }) => {
           </>
         )}
       </div>
+      )}
     </div>
   );
 };

@@ -7,10 +7,12 @@ import "../styles/components.css";
 
 
 const BookingPage = () => {
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [servicesForCategory, setServicesForCategory] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
+  
 
   const toggleCategory = (category) => {
     if (selectedCategory === category) {
@@ -114,6 +116,7 @@ const BookingPage = () => {
           services={servicesForCategory}
           onBack={() => toggleCategory(selectedCategory)}
           onServiceClick={handleServiceSelect}
+          mode="booking"
         />
       )}
       
