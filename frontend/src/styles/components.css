@@ -254,6 +254,11 @@
 }
 /*home*/
 .home__header {
+  background-image: url("/images/hero.jpg");
+  background-size: cover;
+  background-position: center 20%;
+  background-repeat: no-repeat;
+  min-height: 65vh;
   text-align: center;
   background-color:var(--accent-color);
   color: white;

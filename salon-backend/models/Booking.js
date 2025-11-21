@@ -12,7 +12,7 @@ const BookingSchema = new mongoose.Schema({
   customer: {
     name: { type: String, required: true },
     phone: { type: String },
-    email: { type: String },
+    email: { type: String,required:true },
   },
   isConfirmed: { type: Boolean, required: false },
   hasDeposit: { type: Boolean, required: false },

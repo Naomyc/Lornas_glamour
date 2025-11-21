@@ -1,13 +1,56 @@
 const Booking = require("../models/Booking");
 const mongoose = require("mongoose");
-
+const fetch = require("node-fetch");
 
 // POST a new booking
-exports.createBooking=async (req, res) => {
+exports.createBooking = async (req, res) => {
   try {
     const bookingData = req.body;
     const newBooking = new Booking(bookingData);
     const savedBooking = await newBooking.save();
+
+    // Log the saved booking
+    console.log("✅ Booking saved:", savedBooking);
+
+    try {
+      const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": process.env.BREVO_API_KEY,
+        },
+        body: JSON.stringify({
+          sender: {
+            name: "LC Glamour",
+            email: "naomybiwotc@gmail.com"
+          },
+          to: [
+            {
+              email: savedBooking.customer.email,
+              name: savedBooking.customer.name
+            }
+          ],
+          subject: "Your Booking is Confirmed!",
+          htmlContent: `
+            <h2>Booking Confirmation</h2>
+            <p>Hi ${savedBooking.customer.name},</p>
+            <p>Your booking for <strong>${savedBooking.appointmentAt.toLocaleString()}</strong> has been confirmed.</p>
+            <p>Welcome 😊</p>
+            <p>Thank you for choosing LC Glamour!</p>
+          `
+        })
+      });
+
+      // Log Brevo response
+      const data = await response.json();
+      console.log("📬 Brevo API response:", data);
+      if (!response.ok) {
+        console.error("⚠️ Brevo API returned an error:", data);
+      }
+
+    } catch (emailErr) {
+      console.error("⚠️ Email failed to send:", emailErr);
+    }
 
     res.status(201).json(savedBooking);
   } catch (error) {
@@ -21,17 +64,18 @@ exports.createBooking=async (req, res) => {
 };
 
 // GET all bookings
-exports.getAllBooking=async (req, res) => {
+exports.getAllBooking = async (req, res) => {
   try {
     const bookings = await Booking.find();
     res.json(bookings);
   } catch (error) {
+    console.error("Error fetching bookings:", error);
     res.status(500).json({ message: "Error fetching bookings", error });
   }
 };
 
 // GET booking by ID
-exports.getBookingById= async (req, res) => {
+exports.getBookingById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
@@ -39,12 +83,13 @@ exports.getBookingById= async (req, res) => {
     }
     res.json(booking);
   } catch (error) {
+    console.error("Error fetching booking:", error);
     res.status(500).json({ message: "Error fetching booking.", error });
   }
 };
 
 // PUT update booking (general updates)
-exports.updateBooking=async (req, res) => {
+exports.updateBooking = async (req, res) => {
   try {
     const dataUpdate = req.body;
     const bookingUpdate = await Booking.findByIdAndUpdate(req.params.id, dataUpdate, { new: true });
@@ -53,6 +98,7 @@ exports.updateBooking=async (req, res) => {
     }
     res.json(bookingUpdate);
   } catch (error) {
+    console.error("Error updating booking:", error);
     res.status(500).json({ message: "Error updating booking.", error });
   }
 };
@@ -69,39 +115,32 @@ exports.cancelBooking = async (req, res) => {
     const appointmentTime = new Date(booking.appointmentAt);
     const diffHours = (appointmentTime - now) / (1000 * 60 * 60);
 
-    // Cancellation policy: free if > 12 hours before appointment
     if (diffHours > 12) {
-      // Free cancellation
       booking.status = "cancelled";
       booking.cancellationDate = now;
       booking.depositForfeited = false;
       booking.feeApplied = 0;
     } else {
-      // Late cancellation - apply fee or keep deposit
       booking.status = "cancelled";
       booking.cancellationDate = now;
-      booking.depositForfeited = booking.hasDeposit; // Forfeit deposit if any
-      booking.feeApplied = booking.hasDeposit ? 0 : 1000; // Example fee if no deposit
-      // You can customize fee amount as needed
+      booking.depositForfeited = booking.hasDeposit;
+      booking.feeApplied = booking.hasDeposit ? 0 : 1000;
     }
 
     const updatedBooking = await booking.save();
-
     res.json(updatedBooking);
   } catch (error) {
+    console.error("Error cancelling booking:", error);
     res.status(500).json({ message: "Error cancelling booking.", error });
   }
 };
 
 // PATCH complete booking
-exports.completeBooking=async (req, res) => {
+exports.completeBooking = async (req, res) => {
   try {
     const completedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
-      {
-        status: "completed",
-        completedDate: new Date(),
-      },
+      { status: "completed", completedDate: new Date() },
       { new: true }
     );
     if (!completedBooking) {
@@ -109,19 +148,17 @@ exports.completeBooking=async (req, res) => {
     }
     res.json(completedBooking);
   } catch (error) {
+    console.error("Error completing booking:", error);
     res.status(500).json({ message: "Error completing booking.", error });
   }
 };
 
 // PATCH mark booking as no-show
-exports.noShowBooking=async (req, res) => {
+exports.noShowBooking = async (req, res) => {
   try {
     const noShowBooking = await Booking.findByIdAndUpdate(
       req.params.id,
-      {
-        status: "no-show",
-        noShowDate: new Date(),
-      },
+      { status: "no-show", noShowDate: new Date() },
       { new: true }
     );
     if (!noShowBooking) {
@@ -129,9 +166,11 @@ exports.noShowBooking=async (req, res) => {
     }
     res.json(noShowBooking);
   } catch (error) {
+    console.error("Error marking no-show:", error);
     res.status(500).json({ message: "Error marking no-show.", error });
   }
 };
+
 // PATCH apply fee or forfeit deposit manually
 exports.applyPenalty = async (req, res) => {
   try {
@@ -152,15 +191,16 @@ exports.applyPenalty = async (req, res) => {
 
     res.json(updatedBooking);
   } catch (error) {
+    console.error("Error applying penalty:", error);
     res.status(500).json({ message: "Error applying penalty.", error });
   }
 };
+
 // GET appointment overview with optional filters
 exports.getAppointmentOverview = async (req, res) => {
   try {
     const { startDate, endDate, status } = req.query;
 
-    // Build filter object
     let filter = {};
 
     if (startDate || endDate) {
@@ -170,25 +210,17 @@ exports.getAppointmentOverview = async (req, res) => {
     }
 
     if (status) {
-      // Accept comma-separated statuses: ?status=confirmed,completed
       const statuses = status.split(",");
       filter.status = { $in: statuses };
     }
 
-    // Fetch filtered bookings, sorted by date ascending
     const appointments = await Booking.find(filter)
       .sort({ appointmentAt: 1 })
       .select("serviceSelection staffSelection appointmentAt status customer");
 
-    // Optional: Prepare summary counts by status
     const counts = await Booking.aggregate([
       { $match: filter },
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 }
-        }
-      }
+      { $group: { _id: "$status", count: { $sum: 1 } } }
     ]);
 
     res.json({
@@ -196,6 +228,7 @@ exports.getAppointmentOverview = async (req, res) => {
       appointments,
     });
   } catch (error) {
+    console.error("Error fetching appointment overview:", error);
     res.status(500).json({ message: "Error fetching appointment overview.", error });
   }
 };

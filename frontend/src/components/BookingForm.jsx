@@ -13,6 +13,7 @@ const BookingForm = ({
   setCurrentStep,
   onBackToServices,
 }) => {
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [staffList, setStaffList] = useState([]);
   const [loadingStaff, setLoadingStaff] = useState(false);
@@ -23,6 +24,7 @@ const BookingForm = ({
     email: "",
     phone: "",
   });
+  
 
   // fetch staff when service + date selected
   useEffect(() => {
@@ -146,51 +148,71 @@ const BookingForm = ({
       )}
 
       {/* Step 4: Contact Information */}
-      {currentStep === 4 && (
-        <>
-          <h3 className="step-title">Contact Information</h3>
-          <label className="contact-label">
-            Name:
-            <input
-              type="text"
-              value={contactInfo.name}
-              onChange={(e) =>
-                setContactInfo({ ...contactInfo, name: e.target.value })
-              }
-              className="contact-input"
-            />
-          </label>
-          <label className="contact-label">
-            Email:
-            <input
-              type="email"
-              value={contactInfo.email}
-              onChange={(e) =>
-                setContactInfo({ ...contactInfo, email: e.target.value })
-              }
-              className="contact-input"
-            />
-          </label>
-          <label className="contact-label">
-            Phone:
-            <input
-              type="tel"
-              value={contactInfo.phone}
-              onChange={(e) =>
-                setContactInfo({ ...contactInfo, phone: e.target.value })
-              }
-              className="contact-input"
-            />
-          </label>
-          <button
-            className={`continue-btn ${!contactInfo.name || !contactInfo.email || !contactInfo.phone ? "disabled" : ""}`}
-            disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
-            onClick={() => setCurrentStep(5)}
-          >
-            Continue
-          </button>
-        </>
-      )}
+{currentStep === 4 && (
+  <>
+    <h3 className="step-title">Contact Information</h3>
+    <label className="contact-label">
+      Name:
+      <input
+        type="text"
+        value={contactInfo.name}
+        onChange={(e) =>
+          setContactInfo({ ...contactInfo, name: e.target.value })
+        }
+        className="contact-input"
+      />
+    </label>
+    <label className="contact-label">
+      Email:
+      <input
+        type="email"
+        value={contactInfo.email}
+        onChange={(e) =>
+          setContactInfo({ ...contactInfo, email: e.target.value })
+        }
+        className="contact-input"
+      />
+    </label>
+    <label className="contact-label">
+      Phone:
+      <input
+        type="tel"
+        value={contactInfo.phone}
+        onChange={(e) =>
+          setContactInfo({ ...contactInfo, phone: e.target.value })
+        }
+        className="contact-input"
+      />
+    </label>
+    <button
+      className={`continue-btn ${!contactInfo.name || !contactInfo.email || !contactInfo.phone ? "disabled" : ""}`}
+      disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
+      onClick={async () => {
+        // prepare booking data
+        const bookingData = {
+          serviceSelection: selectedService,
+          staffSelection: anyStaff ? null : selectedStaffId,
+          appointmentAt: selectedDate,
+          customer: contactInfo,
+          addOns: selectedAddOns,
+        };
+
+        console.log("🚀 Submitting booking:", bookingData); // log what will be sent
+
+        try {
+          const res = await submitBooking(bookingData);
+          console.log("✅ Booking saved:", res.data); // log success
+          setCurrentStep(5); // move to confirmation
+        } catch (err) {
+          console.error("❌ Booking failed:", err); // log error
+        }
+      }}
+    >
+      Continue
+    </button>
+  </>
+)}
+
 
       {/* Step 5: Confirmation */}
       {currentStep === 5 && (
