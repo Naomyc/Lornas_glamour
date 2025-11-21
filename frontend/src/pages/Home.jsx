@@ -28,11 +28,7 @@ const Home = () => {
       {/* Salon Services Section */}
       <section className="home__services" id="categories">
         <SalonServices />
-        <div className="home__cta">
-          <Link to="/booking" className="btn btn--primary">
-            Book Now
-          </Link>
-        </div>
+       
       </section>
 
       {/* Staff Availability Section */}
