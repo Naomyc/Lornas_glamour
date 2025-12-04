@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import BookingPage from './pages/BookingPage'; // <-- You'll need to create this
+import BookingPage from './pages/BookingPage'; 
 import Dashboard from './pages/Dashboard';
 import Footer from './components/Footer';
+import ContactUs from './components/Contact';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <div >
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/Contact" element={<ContactUs />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/admin" element={<Dashboard/>}/>
         </Routes>

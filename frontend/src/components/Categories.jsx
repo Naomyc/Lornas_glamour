@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCategories } from "../api/salonApi";
 
 
-const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
+const Categories = ({ expandedCategory, toggleCategory, showImage = true ,showSummary=true}) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,7 +31,7 @@ const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
 
   return (
     <div className={`categories-container ${layoutClass}`}>
-      <h2>Our Services</h2>
+     
       <div className={`cards-row ${layoutClass}`}>
         {categories.map((cat) => {
           const isExpanded = expandedCategory === cat.name;
@@ -68,7 +68,18 @@ const Categories = ({ expandedCategory, toggleCategory, showImage = true }) => {
             </button>
           );
         })}
+        {/* Collapsed summary*/}
+    
       </div>
+      {showSummary&&(
+  <div className={`service-summary-panel ${layoutClass}`}>
+      <h4>Summary</h4>
+      <p>Please select a category to see services here</p>
+      <button className="continue-button" disabled>
+        Continue to Book Time
+      </button>
+    </div>
+    )}
     </div>
   );
 };

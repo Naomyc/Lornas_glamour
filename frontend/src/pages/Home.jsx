@@ -21,7 +21,7 @@ const Home = () => {
         <h2>What We Offer</h2>
         <p>
           From braids to color and everything in between — explore our top-notch
-          services.
+          services.Please select a category to see services.
         </p>
       </section>
 
@@ -30,12 +30,7 @@ const Home = () => {
         <SalonServices />
        
       </section>
-
-      {/* Staff Availability Section */}
-      <section className="home__availability">
-        <StaffAvailability />
-      </section>
-
+      
      
     </div>
   );

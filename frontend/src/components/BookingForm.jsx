@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getStaff } from "../api/salonApi";
@@ -35,8 +35,10 @@ const BookingForm = ({
       try {
         const formattedDate = selectedDate.toISOString().split("T")[0];
         const response = await getStaff(formattedDate);
+        console.log("👥 Staff list fetched:", response.data); // LOG fetched staff
         setStaffList(response.data);
-      } catch {
+      } catch (err) {
+        console.error("❌ Error fetching staff:", err);
         setStaffList([]);
       } finally {
         setLoadingStaff(false);
@@ -62,9 +64,7 @@ const BookingForm = ({
         <>
           <h3 className="step-title">Selected Service</h3>
           <div className="service-summary">
-            <p>
-              <strong>{selectedService.service_name}</strong>
-            </p>
+            <p><strong>{selectedService.service_name}</strong></p>
             <p>Price: €{selectedService.price}</p>
             <p>Duration: {formatDuration(selectedService.duration)}</p>
           </div>
@@ -73,8 +73,11 @@ const BookingForm = ({
 
       {/* Step 2: Date & Time */}
       {currentStep === 2 && (
+        
         <>
+        
           <h3 className="step-title">Select Date and Time</h3>
+          
           <DatePicker
             selected={selectedDate}
             onChange={setSelectedDate}
@@ -148,71 +151,85 @@ const BookingForm = ({
       )}
 
       {/* Step 4: Contact Information */}
-{currentStep === 4 && (
-  <>
-    <h3 className="step-title">Contact Information</h3>
-    <label className="contact-label">
-      Name:
-      <input
-        type="text"
-        value={contactInfo.name}
-        onChange={(e) =>
-          setContactInfo({ ...contactInfo, name: e.target.value })
-        }
-        className="contact-input"
-      />
-    </label>
-    <label className="contact-label">
-      Email:
-      <input
-        type="email"
-        value={contactInfo.email}
-        onChange={(e) =>
-          setContactInfo({ ...contactInfo, email: e.target.value })
-        }
-        className="contact-input"
-      />
-    </label>
-    <label className="contact-label">
-      Phone:
-      <input
-        type="tel"
-        value={contactInfo.phone}
-        onChange={(e) =>
-          setContactInfo({ ...contactInfo, phone: e.target.value })
-        }
-        className="contact-input"
-      />
-    </label>
-    <button
-      className={`continue-btn ${!contactInfo.name || !contactInfo.email || !contactInfo.phone ? "disabled" : ""}`}
-      disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
-      onClick={async () => {
-        // prepare booking data
-        const bookingData = {
-          serviceSelection: selectedService,
-          staffSelection: anyStaff ? null : selectedStaffId,
-          appointmentAt: selectedDate,
-          customer: contactInfo,
-          addOns: selectedAddOns,
-        };
+      {currentStep === 4 && (
+        <>
+          <h3 className="step-title">Contact Information</h3>
+          <label className="contact-label">
+            Name:
+            <input
+              type="text"
+              value={contactInfo.name}
+              onChange={(e) =>
+                setContactInfo({ ...contactInfo, name: e.target.value })
+              }
+              className="contact-input"
+            />
+          </label>
+          <label className="contact-label">
+            Email:
+            <input
+              type="email"
+              value={contactInfo.email}
+              onChange={(e) =>
+                setContactInfo({ ...contactInfo, email: e.target.value })
+              }
+              className="contact-input"
+            />
+          </label>
+          <label className="contact-label">
+            Phone:
+            <input
+              type="tel"
+              value={contactInfo.phone}
+              onChange={(e) =>
+                setContactInfo({ ...contactInfo, phone: e.target.value })
+              }
+              className="contact-input"
+            />
+          </label>
 
-        console.log("🚀 Submitting booking:", bookingData); // log what will be sent
+          <button
+            className={`continue-btn ${
+              !contactInfo.name || !contactInfo.email || !contactInfo.phone
+                ? "disabled"
+                : ""
+            }`}
+            disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
+            onClick={async () => {
+              // Prepare booking data
+              const bookingData = {
+                serviceSelection: selectedService.service_name, // send string only
+                staffSelection: anyStaff ? null : selectedStaffId,
+                appointmentAt: selectedDate.toISOString(),
+                customer: contactInfo,
+                addOns: selectedAddOns,
+              };
 
-        try {
-          const res = await submitBooking(bookingData);
-          console.log("✅ Booking saved:", res.data); // log success
-          setCurrentStep(5); // move to confirmation
-        } catch (err) {
-          console.error("❌ Booking failed:", err); // log error
-        }
-      }}
-    >
-      Continue
-    </button>
-  </>
-)}
+              console.log("🚀 Submitting booking:", bookingData); // LOG request
 
+              try {
+                const res = await submitBooking(bookingData);
+                console.log("✅ Booking saved:", res.data); // LOG response
+                setCurrentStep(5); // move to confirmation
+              } catch (err) {
+                console.error("❌ Booking failed:", err); // LOG error
+
+                if (err.response) {
+                  console.error("Status:", err.response.status);
+                  console.error("Backend message:", err.response.data);
+                }
+
+                alert(
+                  err.response?.data?.message ||
+                    "Booking failed. Please check your details or try another time."
+                );
+              }
+            }}
+          >
+            Continue
+          </button>
+        </>
+      )}
 
       {/* Step 5: Confirmation */}
       {currentStep === 5 && (

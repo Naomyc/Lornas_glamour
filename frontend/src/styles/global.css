@@ -1,10 +1,10 @@
 /* ========== Variables ========== */
 :root {
-  --primary-color: #b85c38;       /* warm, rich brown */
-  --secondary-color: #f2e9e4;     /* soft, cozy background */
-  --accent-color: #a67c52;        /* subtle highlight */
-  --text-color-light: #242424;    /* dark text for light backgrounds */
-  --text-color-dark: #f5f5f5;     /* light text for dark backgrounds */
+  --primary-color: #b85c38;       
+  --secondary-color: #f2e9e4;   
+  --accent-color: #a67c52;        
+  --text-color-light: #242424;    
+  --text-color-dark: #f5f5f5;     
   --bg-color-light: #ffffff;      
   --bg-color-dark: #121212;
 
@@ -23,6 +23,9 @@
 /* ========== Base Styles ========== */
 html {
   font-size: 16px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
@@ -41,8 +44,10 @@ body {
   font-weight: var(--base-font-weight);
   color: var(--text-color-light);
   background-color: var(--secondary-color);
-  -webkit-font-smoothing: antialiased;;
+  -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -66,7 +71,7 @@ a {
 
 a:hover {
   text-decoration: underline;
-  color: #8a4225; /* slightly darker primary */
+  color: #8a4225; 
 }
 
 ul, ol {
@@ -102,7 +107,7 @@ ul, ol {
 /* ========== Layout Helpers ========== */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: none;
   margin: 0 auto;
   padding: 0 1rem;
 }

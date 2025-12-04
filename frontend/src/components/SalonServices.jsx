@@ -20,6 +20,7 @@ const SalonServices = () => {
       <Categories
         expandedCategory={expandedCategory}
         toggleCategory={toggleCategory}
+        showSummary={false}
       />
       <ServiceList expandedCategory={expandedCategory} showSummary={false} mode="home" onBookNowClick={handleBookNow} />
     </div>

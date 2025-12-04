@@ -41,7 +41,7 @@ const BookingPage = () => {
 
   const handleServiceSelect = (service) => {
     setSelectedServices([service]); // single select for now
-    setCurrentStep(2); // move to date/time step
+    setCurrentStep(2); 
   };
 
   const handleBackToServices = () => {
@@ -50,7 +50,7 @@ const BookingPage = () => {
   };
 
   return (
-    <div className="booking-page">
+    <div className="booking">
       <h2>Book an Appointment</h2>
 
       {/* Step Navigation */}
@@ -88,7 +88,7 @@ const BookingPage = () => {
           </li>
         </ul>
       </div>
-
+<div className="booking-page">
       {/* Step 1: Select Category and Service */}
       {currentStep === 1 && !selectedCategory && (
   <>
@@ -98,14 +98,7 @@ const BookingPage = () => {
       showImage={false}
     />
 
-    {/* Collapsed summary for no category */}
-    <div className="service-summary-panel">
-      <h4>Summary</h4>
-      <p>Please select a category to see services here</p>
-      <button className="continue-button" disabled>
-        Continue to Book Time
-      </button>
-    </div>
+    
   </>
 )}
 
@@ -133,6 +126,7 @@ const BookingPage = () => {
           onBackToServices={handleBackToServices}
         />
       )}
+      </div>
     </div>
   );
 };

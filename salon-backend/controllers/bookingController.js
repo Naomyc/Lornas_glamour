@@ -1,12 +1,44 @@
 const Booking = require("../models/Booking");
 const mongoose = require("mongoose");
 const fetch = require("node-fetch");
+const Service=require("../models/Service");
 
 // POST a new booking
 exports.createBooking = async (req, res) => {
   try {
     const bookingData = req.body;
+    const service = await Service.findOne({ service_name: bookingData.serviceSelection });
+    if (!service) {
+      return res.status(400).json({ message: "Invalid service selected." });
+    }
+    const serviceDuration = service.duration; // in minutes
+    const breakDuration = 15;
+    const appointmentStart = new Date(bookingData.appointmentAt);
+    const appointmentEnd = new Date(appointmentStart.getTime() + (serviceDuration + breakDuration) * 60000);
+    const staffConflict = await Booking.findOne({
+      staffSelection: bookingData.staffSelection,
+      status: { $in: ["pending", "confirmed", "completed"] },
+      appointmentAt: { $lt: appointmentEnd },
+      $expr: { $gt: [{ $add: ["$appointmentAt", { $multiply: [serviceDuration, 60000] }] }, appointmentStart] }
+    });
+    if (staffConflict) {
+      return res.status(400).json({ message: "Staff is not available at this time." });
+    }
+
+    // 4️⃣ Check customer conflicts
+    const customerConflict = await Booking.findOne({
+      "customer.email": bookingData.customer.email,
+      status: { $in: ["pending", "confirmed", "completed"] },
+      appointmentAt: { $lt: appointmentEnd },
+      $expr: { $gt: [{ $add: ["$appointmentAt", { $multiply: [serviceDuration, 60000] }] }, appointmentStart] }
+    });
+    if (customerConflict) {
+      return res.status(400).json({ message: "Customer already has a booking at this time." });
+    }
+
+    
     const newBooking = new Booking(bookingData);
+    
     const savedBooking = await newBooking.save();
 
     // Log the saved booking
@@ -32,12 +64,56 @@ exports.createBooking = async (req, res) => {
           ],
           subject: "Your Booking is Confirmed!",
           htmlContent: `
-            <h2>Booking Confirmation</h2>
-            <p>Hi ${savedBooking.customer.name},</p>
-            <p>Your booking for <strong>${savedBooking.appointmentAt.toLocaleString()}</strong> has been confirmed.</p>
-            <p>Welcome 😊</p>
-            <p>Thank you for choosing LC Glamour!</p>
-          `
+  <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+    
+    <!-- Header -->
+    <div style="text-align: center; padding-bottom: 15px; border-bottom: 2px solid #000;">
+      <h2 style="color: #000; margin: 0; font-size: 26px; letter-spacing: 1px;">LC Glamour</h2>
+      <p style="color: #C9A86E; margin: 5px 0 0; font-size: 14px;">Luxury Beauty & Hair</p>
+    </div>
+
+    <!-- Body -->
+    <p style="font-size: 15px; margin-top: 20px;">
+      Hi ${savedBooking.customer.name},
+    </p>
+
+    <p style="font-size: 15px; line-height: 1.5;">
+      Your appointment has been <strong>confirmed</strong> for:<br/>
+      <strong>${savedBooking.appointmentAt.toLocaleString()}</strong>
+    </p>
+
+    <!-- Location -->
+    <p style="font-size: 15px; line-height: 1.5; margin-top: 15px;">
+      <strong>Location:</strong><br/>
+      LC Glamour<br/>
+      Järvensivuntie 13A
+    </p>
+
+    <!-- Map Button -->
+    <a href="https://www.google.com/maps/search/?api=1&query=Järvensivuntie+13A"
+       style="
+         display: inline-block;
+         margin-top: 10px;
+         background: #000;
+         color: #C9A86E;
+         padding: 10px 18px;
+         border-radius: 6px;
+         text-decoration: none;
+         font-size: 15px;
+       "
+    >
+      View on Google Maps
+    </a>
+
+    <!-- Footer -->
+    <p style="margin-top: 25px; font-size: 14px; color: #555;">
+      Thank you for choosing <strong>LC Glamour</strong>.  
+      We look forward to giving you a beautiful experience ✨
+    </p>
+
+  </div>
+`
+
         })
       });
 

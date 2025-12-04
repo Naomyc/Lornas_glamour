@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getServices } from "../api/salonApi";
-import "../styles/components.css"; // make sure CSS below is included
+import "../styles/components.css"; 
 
 const formatDuration = (minutes = 0) => {
   const hrs = Math.floor(minutes / 60);
@@ -39,7 +39,7 @@ const ServiceList = ({ expandedCategory, onServiceClick, onBack,showSummary=true
   }, []);
 
   if (loading) return <p>Loading services...</p>;
-  if (!expandedCategory) return <p>Please select a category to see services.</p>;
+
 
   const renderServiceCard = (service) => {
     const isSelected = selectedService && selectedService._id === service._id;
