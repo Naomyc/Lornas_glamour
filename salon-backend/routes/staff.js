@@ -15,7 +15,9 @@ function validateObjectId(req, res, next) {
 
 
 //Router
+router.get("/:id/available-dates", validateObjectId, staffController.getStaffAvailableDates);
 router.get("/available", staffController.getAvailableStaff);
+router.get("/available-times", staffController.getAvailableTimes);
 router.post("/", staffController.createStaff);
 router.get("/", staffController.getAllStaff);
 router.get("/:id", validateObjectId, staffController.getStaffById);

@@ -810,10 +810,7 @@
     font-size: 0.9rem;
   }
 }
-.calendar {
-  margin: 20px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  background-color: #f9f9f9;
+
+.booking-form{
+  margin-bottom: 20px;
 }

@@ -18,7 +18,7 @@ export default function Dashboard() {
     try{
       setLoading(true);
       const [bookingsRes,staffRes,inventoryRes]= await Promise.all([
-        fetch(`${API_BASE}/bookings/upcooming`),
+        fetch(`${API_BASE}/bookings`),
         fetch(`${API_BASE}/staff`),
         fetch(`${API_BASE}/inventory`),
 
@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   const refreshBookings=async ()=>{
     try{
-      const res=await fetch(`${API_BASE}/bookings/upcoming`);
+      const res=await fetch(`${API_BASE}/bookings`);
       const data=await res.json();
       setBookings(data);
     } catch(err){

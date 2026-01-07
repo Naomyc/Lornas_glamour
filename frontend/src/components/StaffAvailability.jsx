@@ -1,97 +1,99 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getStaff } from "../api/salonApi";
+import { getAllStaff, getStaffAvailableDates } from "../api/salonApi";
 
 const StaffAvailability = () => {
   const [staff, setStaff] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [loading, setLoading] = useState(true);
+  const [selectedStaffId, setSelectedStaffId] = useState(null);
+  const [availableDates, setAvailableDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [loadingStaff, setLoadingStaff] = useState(true);
+  const [loadingDates, setLoadingDates] = useState(false);
 
-  // Load staff on mount with today's date
+  // Load all staff on mount
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const today = new Date().toISOString().split("T")[0];
-        const response = await getStaff(today);
+        const response = await getAllStaff();
         setStaff(response.data);
       } catch (error) {
         console.error("Failed to load staff", error);
       } finally {
-        setLoading(false);
+        setLoadingStaff(false);
       }
     };
-
     fetchStaff();
   }, []);
 
-  // When user changes date
-  const handleDateChange = async (date) => {
-    setSelectedDate(date);
-    setLoading(true);
+  // Fetch available dates when a staff is selected
+  useEffect(() => {
+    if (!selectedStaffId) return;
 
-    try {
-      const formattedDate = date.toISOString().split("T")[0];
-      const response = await getStaff(formattedDate);
-      setStaff(response.data);
-    } catch (error) {
-      console.error("Failed to load staff for selected date", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchDates = async () => {
+      setLoadingDates(true);
+      try {
+        const response = await getStaffAvailableDates(selectedStaffId);
+        setAvailableDates(response.data);
+        setSelectedDate(null); // reset selected date
+      } catch (error) {
+        console.error("Failed to load available dates", error);
+      } finally {
+        setLoadingDates(false);
+      }
+    };
+    fetchDates();
+  }, [selectedStaffId]);
 
-  // Render loading, no staff, or staff list
-  if (loading) return <p>Loading staff...</p>;
-  if (!staff.length) return <p>No staff available on this date.</p>;
+  if (loadingStaff) return <p>Loading staff...</p>;
 
   return (
     <div>
       <h2>Staff Availability</h2>
 
-      {/* Date picker */}
-      <div style={{ marginBottom: "20px" }}>
-        <label>Select Date: </label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={handleDateChange}
-          dateFormat="yyyy-MM-dd"
-        />
+      {/* Staff Buttons */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
+        <button
+          style={{
+            backgroundColor: selectedStaffId === null ? "#007bff" : "#ccc",
+            color: selectedStaffId === null ? "#fff" : "#000",
+          }}
+          onClick={() => setSelectedStaffId(null)}
+        >
+          Anyone
+        </button>
+        {staff.map((s) => (
+          <button
+            key={s._id}
+            style={{
+              backgroundColor: selectedStaffId === s._id ? "#007bff" : "#ccc",
+              color: selectedStaffId === s._id ? "#fff" : "#000",
+            }}
+            onClick={() => setSelectedStaffId(s._id)}
+          >
+            {s.name}
+          </button>
+        ))}
       </div>
 
-      {/* Staff list */}
-      <ul>
-        {staff.map((s) => (
-          <li key={s._id} style={{ marginBottom: "15px" }}>
-            <strong>{s.name}</strong> (Active: {s.active ? "Yes" : "No"})<br />
-
-            {/* Working Days */}
-            Working Days:{" "}
-            {s.availability?.workingDays?.length
-              ? s.availability.workingDays
-                  .map((d) => `${d.day} (${d.start} - ${d.end})`)
-                  .join(", ")
-              : "N/A"}
-            <br />
-
-            {/* Leaves */}
-            Leaves:{" "}
-            {s.availability?.leaves?.length ? (
-              <ul>
-                {s.availability.leaves.map((leave, i) => (
-                  <li key={i}>
-                    {new Date(leave.startDate).toLocaleDateString()} -{" "}
-                    {new Date(leave.endDate).toLocaleDateString()} ({leave.type})
-                    {leave.notes ? ` - ${leave.notes}` : ""}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              "None"
-            )}
-          </li>
-        ))}
-      </ul>
+      {/* Date Picker */}
+      {selectedStaffId !== null && (
+        <div style={{ marginBottom: "20px" }}>
+          {loadingDates ? (
+            <p>Loading available dates...</p>
+          ) : availableDates.length ? (
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              includeDates={availableDates.map((d) => new Date(d))}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select an available date"
+            />
+          ) : (
+            <p>No available dates for this staff.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

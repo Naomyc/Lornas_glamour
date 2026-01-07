@@ -90,7 +90,7 @@ exports.createBooking = async (req, res) => {
     </p>
 
     <!-- Map Button -->
-    <a href="https://www.google.com/maps/search/?api=1&query=Järvensivuntie+13A"
+    <a href="https://www.google.com/maps/search/?api=1&query=Järvensivuntie+13A,+Tampere"
        style="
          display: inline-block;
          margin-top: 10px;
